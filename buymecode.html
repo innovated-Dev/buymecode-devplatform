@@ -1,0 +1,1752 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Buy Me Code — Developer Tools & Website Solutions Marketplace</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Syne:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<style>
+/* ═══════════════════════════════════════════
+   TOKENS
+═══════════════════════════════════════════ */
+:root {
+  --font-sans: 'Syne', ui-sans-serif, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, monospace;
+
+  --bg-primary: #0d0d0d;
+  --bg-secondary: #141414;
+  --bg-tertiary: #1a1a1a;
+  --bg-elevated: #1f1f1f;
+  --bg-hover: #252525;
+  --border: #2a2a2a;
+  --border-subtle: #1f1f1f;
+  --text-primary: #f0f0ee;
+  --text-secondary: #8a8a8a;
+  --text-tertiary: #525252;
+  --text-inverse: #0d0d0d;
+  --accent: #00e5ff;
+  --accent-hover: #00c8e0;
+  --accent-subtle: rgba(0,229,255,0.08);
+  --accent-text: #00e5ff;
+  --accent-glow: rgba(0,229,255,0.2);
+  --success: #00e096;
+  --success-subtle: rgba(0,224,150,0.1);
+  --blue: #5b8af7;
+  --blue-subtle: rgba(91,138,247,0.1);
+  --red: #ff6b6b;
+  --red-subtle: rgba(255,107,107,0.1);
+  --purple: #b87fff;
+  --purple-subtle: rgba(184,127,255,0.1);
+  --orange: #ff9f43;
+  --orange-subtle: rgba(255,159,67,0.1);
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.6);
+  --shadow-md: 0 4px 16px rgba(0,0,0,0.6);
+  --shadow-lg: 0 8px 40px rgba(0,0,0,0.7);
+  --shadow-accent: 0 0 30px rgba(0,229,255,0.15);
+  --radius-sm: 5px;
+  --radius-md: 9px;
+  --radius-lg: 13px;
+  --radius-xl: 17px;
+}
+[data-theme="light"] {
+  --bg-primary: #f7f7f5;
+  --bg-secondary: #ffffff;
+  --bg-tertiary: #f0f0ed;
+  --bg-elevated: #ffffff;
+  --bg-hover: #e8e8e5;
+  --border: #e0e0dc;
+  --border-subtle: #eaeae7;
+  --text-primary: #111111;
+  --text-secondary: #555555;
+  --text-tertiary: #999999;
+  --text-inverse: #ffffff;
+  --accent: #0099bb;
+  --accent-hover: #007a99;
+  --accent-subtle: rgba(0,153,187,0.08);
+  --accent-text: #0077aa;
+  --accent-glow: rgba(0,153,187,0.15);
+  --success: #059669;
+  --success-subtle: rgba(5,150,105,0.08);
+  --blue: #2563eb;
+  --blue-subtle: rgba(37,99,235,0.08);
+  --red: #dc2626;
+  --red-subtle: rgba(220,38,38,0.08);
+  --purple: #7c3aed;
+  --purple-subtle: rgba(124,58,237,0.08);
+  --shadow-sm: 0 1px 2px rgba(0,0,0,0.05);
+  --shadow-md: 0 4px 12px rgba(0,0,0,0.08);
+  --shadow-lg: 0 8px 32px rgba(0,0,0,0.1);
+  --shadow-accent: 0 0 20px rgba(0,153,187,0.1);
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: var(--font-sans);
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  font-size: 14px;
+  line-height: 1.6;
+  transition: background 0.2s, color 0.2s;
+  min-height: 100vh;
+}
+a { color: inherit; text-decoration: none; }
+button { cursor: pointer; font-family: inherit; }
+input, textarea, select { font-family: inherit; }
+
+/* ═══════════════════════════════════════════
+   LAYOUT
+═══════════════════════════════════════════ */
+.app { display: flex; flex-direction: column; min-height: 100vh; }
+
+/* ═══════════════════════════════════════════
+   TOPNAV
+═══════════════════════════════════════════ */
+.topnav {
+  position: sticky; top: 0; z-index: 100;
+  background: rgba(13,13,13,0.92);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--border);
+  padding: 0 24px;
+  height: 54px;
+  display: flex; align-items: center; gap: 16px;
+}
+[data-theme="light"] .topnav { background: rgba(255,255,255,0.92); }
+.nav-logo {
+  display: flex; align-items: center; gap: 9px;
+  font-weight: 800; font-size: 15.5px; letter-spacing: -0.4px;
+  color: var(--text-primary);
+  white-space: nowrap;
+}
+.logo-mark {
+  width: 30px; height: 30px;
+  background: var(--accent);
+  border-radius: 7px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 14px; color: #0d0d0d;
+  box-shadow: 0 0 12px var(--accent-glow);
+}
+.logo-name { display: flex; align-items: center; gap: 2px; }
+.logo-name .slash { color: var(--accent); margin: 0 1px; }
+.nav-search {
+  flex: 1; max-width: 380px; margin: 0 auto;
+  position: relative;
+}
+.nav-search input {
+  width: 100%;
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 7px 12px 7px 36px;
+  color: var(--text-primary);
+  font-size: 13px; font-family: var(--font-sans);
+  outline: none;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+.nav-search input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-subtle); }
+.nav-search input::placeholder { color: var(--text-tertiary); }
+.nav-search-icon {
+  position: absolute; left: 11px; top: 50%; transform: translateY(-50%);
+  color: var(--text-tertiary); font-size: 13px; pointer-events: none;
+}
+.nav-actions { display: flex; align-items: center; gap: 8px; margin-left: auto; }
+.btn-icon {
+  width: 34px; height: 34px;
+  background: none; border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  display: flex; align-items: center; justify-content: center;
+  color: var(--text-secondary);
+  font-size: 14px;
+  transition: all 0.15s;
+}
+.btn-icon:hover { background: var(--bg-hover); color: var(--text-primary); }
+.nav-sep { width: 1px; height: 20px; background: var(--border); }
+.btn-primary {
+  background: var(--accent);
+  color: #0d0d0d;
+  border: none;
+  border-radius: var(--radius-sm);
+  padding: 7px 14px;
+  font-size: 13px;
+  font-weight: 600;
+  font-family: var(--font-sans);
+  transition: background 0.15s, box-shadow 0.15s;
+}
+.btn-primary:hover { background: var(--accent-hover); box-shadow: 0 0 16px var(--accent-glow); }
+.btn-secondary {
+  background: none;
+  color: var(--text-secondary);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 7px 14px;
+  font-size: 13px;
+  font-weight: 500;
+  transition: all 0.15s;
+}
+.btn-secondary:hover { background: var(--bg-hover); color: var(--text-primary); }
+
+/* ═══════════════════════════════════════════
+   SIDEBAR
+═══════════════════════════════════════════ */
+.main-layout { display: flex; flex: 1; }
+.sidebar {
+  width: 220px; flex-shrink: 0;
+  background: var(--bg-secondary);
+  border-right: 1px solid var(--border);
+  padding: 16px 12px;
+  display: flex; flex-direction: column; gap: 4px;
+  position: sticky; top: 54px; height: calc(100vh - 54px);
+  overflow-y: auto;
+}
+.sidebar-section { margin-bottom: 8px; }
+.sidebar-label {
+  font-size: 10.5px; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 0.1em;
+  color: var(--text-tertiary);
+  padding: 4px 8px 8px;
+  font-family: var(--font-mono);
+}
+.nav-item {
+  display: flex; align-items: center; gap: 10px;
+  padding: 7px 10px;
+  border-radius: var(--radius-sm);
+  color: var(--text-secondary);
+  font-size: 13px; font-weight: 500;
+  cursor: pointer;
+  transition: all 0.12s;
+  border: none; background: none; width: 100%; text-align: left;
+}
+.nav-item:hover { background: var(--bg-hover); color: var(--text-primary); }
+.nav-item.active { background: var(--accent-subtle); color: var(--accent-text); }
+.nav-item .icon { font-size: 14px; width: 18px; flex-shrink: 0; }
+.nav-badge {
+  margin-left: auto;
+  background: var(--accent);
+  color: #0d0d0d;
+  font-size: 10px; font-weight: 700;
+  padding: 1px 6px;
+  border-radius: 20px;
+  font-family: var(--font-mono);
+}
+
+/* ═══════════════════════════════════════════
+   CONTENT
+═══════════════════════════════════════════ */
+.content { flex: 1; overflow-y: auto; }
+.page { display: none; padding: 28px; max-width: 1200px; margin: 0 auto; }
+.page.active { display: block; }
+
+/* ═══════════════════════════════════════════
+   HERO — PARTICLE CANVAS FULLPAGE
+═══════════════════════════════════════════ */
+.hero-fullpage {
+  position: relative;
+  min-height: calc(100vh - 54px);
+  display: flex; align-items: center; justify-content: center;
+  overflow: hidden;
+  background: var(--bg-primary);
+  margin: -28px -28px 28px;
+}
+#particleCanvas {
+  position: absolute; inset: 0;
+  width: 100%; height: 100%;
+  pointer-events: none;
+}
+.hero-grid-overlay {
+  position: absolute; inset: 0;
+  background-image:
+    linear-gradient(rgba(0,229,255,0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0,229,255,0.03) 1px, transparent 1px);
+  background-size: 60px 60px;
+  pointer-events: none;
+}
+[data-theme="light"] .hero-grid-overlay {
+  background-image:
+    linear-gradient(rgba(0,153,187,0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0,153,187,0.04) 1px, transparent 1px);
+}
+.hero-content {
+  position: relative; z-index: 2;
+  text-align: center;
+  padding: 60px 32px;
+  max-width: 780px;
+}
+.hero-eyebrow {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: var(--accent-subtle);
+  border: 1px solid rgba(0,229,255,0.2);
+  border-radius: 20px;
+  padding: 5px 14px;
+  font-size: 12px; font-weight: 600;
+  color: var(--accent-text);
+  margin-bottom: 24px;
+  font-family: var(--font-mono);
+  letter-spacing: 0.04em;
+}
+.hero-eyebrow-dot {
+  width: 7px; height: 7px;
+  background: var(--accent);
+  border-radius: 50%;
+  animation: pulse-dot 1.8s ease-in-out infinite;
+  box-shadow: 0 0 6px var(--accent);
+}
+@keyframes pulse-dot {
+  0%,100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.5; transform: scale(0.8); }
+}
+.hero-heading {
+  font-size: clamp(36px, 6vw, 68px);
+  font-weight: 800;
+  line-height: 1.08;
+  letter-spacing: -2px;
+  color: var(--text-primary);
+  margin-bottom: 20px;
+}
+.hero-heading .highlight {
+  color: var(--accent);
+  position: relative;
+}
+.hero-heading .highlight::after {
+  content: '';
+  position: absolute;
+  bottom: -2px; left: 0; right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--accent), transparent);
+  border-radius: 2px;
+  opacity: 0.5;
+}
+.hero-sub {
+  font-size: 17px;
+  color: var(--text-secondary);
+  margin-bottom: 36px;
+  line-height: 1.65;
+  max-width: 560px;
+  margin-left: auto; margin-right: auto;
+}
+.hero-actions {
+  display: flex; gap: 12px; align-items: center; justify-content: center;
+  flex-wrap: wrap;
+  margin-bottom: 48px;
+}
+.btn-hero-primary {
+  background: var(--accent);
+  color: #0d0d0d;
+  border: none;
+  border-radius: var(--radius-md);
+  padding: 14px 28px;
+  font-size: 14.5px;
+  font-weight: 700;
+  font-family: var(--font-sans);
+  transition: all 0.18s;
+  display: inline-flex; align-items: center; gap: 8px;
+  box-shadow: 0 0 30px var(--accent-glow);
+}
+.btn-hero-primary:hover { background: var(--accent-hover); transform: translateY(-1px); box-shadow: 0 0 50px var(--accent-glow); }
+.btn-hero-secondary {
+  background: none;
+  color: var(--text-primary);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 14px 28px;
+  font-size: 14.5px;
+  font-weight: 600;
+  font-family: var(--font-sans);
+  transition: all 0.18s;
+  display: inline-flex; align-items: center; gap: 8px;
+}
+.btn-hero-secondary:hover { background: var(--bg-hover); border-color: var(--accent); }
+.hero-stats {
+  display: flex; gap: 40px; justify-content: center;
+  padding-top: 40px;
+  border-top: 1px solid var(--border);
+  flex-wrap: wrap; gap: 32px;
+}
+.hero-stat { text-align: center; }
+.hero-stat-val {
+  font-size: 28px; font-weight: 800;
+  color: var(--text-primary); letter-spacing: -1px;
+  font-family: var(--font-mono);
+}
+.hero-stat-val span { color: var(--accent); }
+.hero-stat-lbl { font-size: 12px; color: var(--text-tertiary); margin-top: 2px; }
+.hero-scroll-hint {
+  position: absolute; bottom: 28px; left: 50%; transform: translateX(-50%);
+  display: flex; flex-direction: column; align-items: center; gap: 6px;
+  color: var(--text-tertiary); font-size: 11px;
+  font-family: var(--font-mono);
+  animation: float-up 2.5s ease-in-out infinite;
+}
+@keyframes float-up {
+  0%,100% { transform: translateX(-50%) translateY(0); opacity: 0.5; }
+  50% { transform: translateX(-50%) translateY(-5px); opacity: 1; }
+}
+.scroll-arrow { font-size: 16px; }
+
+/* Typed cursor */
+.typed-wrap { display: inline; }
+.typed-cursor { color: var(--accent); animation: blink 0.8s step-end infinite; }
+@keyframes blink { 0%,100% { opacity: 1; } 50% { opacity: 0; } }
+
+/* ═══════════════════════════════════════════
+   SECTION HEADERS
+═══════════════════════════════════════════ */
+.section-header {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 16px;
+}
+.section-title {
+  font-size: 14px; font-weight: 700;
+  color: var(--text-primary);
+  display: flex; align-items: center; gap: 8px;
+  font-family: var(--font-mono);
+  letter-spacing: -0.2px;
+}
+.section-title::before {
+  content: '//';
+  color: var(--accent);
+  font-family: var(--font-mono);
+}
+.section-link {
+  font-size: 12.5px; color: var(--accent-text);
+  cursor: pointer; font-family: var(--font-mono);
+}
+.section-link:hover { text-decoration: underline; }
+
+/* ═══════════════════════════════════════════
+   AD BANNER
+═══════════════════════════════════════════ */
+.ad-banner {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 14px 18px;
+  margin-bottom: 24px;
+  display: flex; align-items: center; gap: 14px;
+  position: relative;
+}
+.ad-label {
+  position: absolute; top: 6px; right: 10px;
+  font-size: 10px; color: var(--text-tertiary);
+  letter-spacing: 0.05em;
+  background: var(--bg-tertiary);
+  padding: 2px 6px; border-radius: 4px;
+  font-family: var(--font-mono);
+}
+.ad-logo {
+  width: 40px; height: 40px; border-radius: var(--radius-sm);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 18px; flex-shrink: 0;
+}
+.ad-content { flex: 1; }
+.ad-title { font-size: 13.5px; font-weight: 600; color: var(--text-primary); margin-bottom: 2px; }
+.ad-desc { font-size: 12.5px; color: var(--text-secondary); }
+.ad-cta {
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 6px 12px;
+  font-size: 12.5px; font-weight: 600;
+  color: var(--text-primary);
+  white-space: nowrap;
+  transition: all 0.15s;
+  cursor: pointer;
+  font-family: var(--font-sans);
+}
+.ad-cta:hover { background: var(--bg-hover); border-color: var(--accent); color: var(--accent); }
+
+/* ═══════════════════════════════════════════
+   FILTER BAR
+═══════════════════════════════════════════ */
+.filter-bar {
+  display: flex; gap: 8px; align-items: center;
+  margin-bottom: 20px; flex-wrap: wrap;
+}
+.filter-chip {
+  background: none;
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 5px 13px;
+  font-size: 12.5px; font-weight: 500;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all 0.12s;
+  font-family: var(--font-sans);
+}
+.filter-chip:hover { border-color: var(--accent); color: var(--accent); }
+.filter-chip.active {
+  background: var(--accent-subtle);
+  border-color: var(--accent);
+  color: var(--accent-text);
+}
+.filter-sort {
+  margin-left: auto;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 6px 10px;
+  font-size: 12.5px;
+  color: var(--text-secondary);
+  cursor: pointer;
+  outline: none;
+}
+
+/* ═══════════════════════════════════════════
+   KITS GRID
+═══════════════════════════════════════════ */
+.kits-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(278px, 1fr));
+  gap: 16px;
+  margin-bottom: 28px;
+}
+.kit-card {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  transition: all 0.2s;
+  cursor: pointer;
+}
+.kit-card:hover {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 1px var(--accent), var(--shadow-md);
+  transform: translateY(-2px);
+}
+.kit-thumb {
+  height: 145px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 44px;
+  position: relative;
+}
+.kit-sponsored-badge {
+  position: absolute; top: 8px; right: 8px;
+  background: var(--accent);
+  color: #0d0d0d;
+  font-size: 10px; font-weight: 700;
+  padding: 2px 8px; border-radius: 4px;
+  letter-spacing: 0.04em;
+  font-family: var(--font-mono);
+}
+.kit-body { padding: 16px; }
+.kit-tags { display: flex; gap: 6px; margin-bottom: 10px; flex-wrap: wrap; }
+.kit-tag {
+  font-size: 11px; font-weight: 600;
+  padding: 2px 8px; border-radius: 4px;
+  background: var(--bg-tertiary);
+  color: var(--text-secondary);
+  font-family: var(--font-mono);
+}
+.kit-tag.free { background: var(--success-subtle); color: var(--success); }
+.kit-tag.new { background: var(--blue-subtle); color: var(--blue); }
+.kit-tag.hot { background: var(--red-subtle); color: var(--red); }
+.kit-title { font-size: 14px; font-weight: 700; color: var(--text-primary); margin-bottom: 6px; line-height: 1.3; }
+.kit-desc { font-size: 12.5px; color: var(--text-secondary); line-height: 1.5; margin-bottom: 14px; }
+.kit-meta { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; }
+.kit-rating { display: flex; align-items: center; gap: 4px; font-size: 12px; color: var(--text-secondary); }
+.kit-downloads { font-size: 12px; color: var(--text-tertiary); font-family: var(--font-mono); }
+.kit-footer { display: flex; align-items: center; justify-content: space-between; }
+.kit-price { font-size: 13.5px; font-weight: 700; color: var(--success); font-family: var(--font-mono); }
+.kit-download-btn {
+  background: var(--accent);
+  color: #0d0d0d;
+  border: none;
+  border-radius: var(--radius-sm);
+  padding: 6px 14px;
+  font-size: 12.5px; font-weight: 700;
+  transition: all 0.15s;
+  font-family: var(--font-sans);
+}
+.kit-download-btn:hover { background: var(--accent-hover); box-shadow: 0 0 12px var(--accent-glow); }
+
+/* ═══════════════════════════════════════════
+   AD CARD
+═══════════════════════════════════════════ */
+.ad-card {
+  background: var(--bg-secondary);
+  border: 1px solid rgba(0,229,255,0.15);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  position: relative;
+}
+.ad-card-inner { padding: 20px; }
+.ad-card-badge {
+  position: absolute; top: 10px; right: 10px;
+  font-size: 10px; color: var(--text-tertiary);
+  background: var(--bg-tertiary);
+  padding: 2px 6px; border-radius: 4px;
+  font-family: var(--font-mono);
+}
+.ad-card-logo { font-size: 32px; margin-bottom: 10px; }
+.ad-card-title { font-size: 13.5px; font-weight: 700; color: var(--text-primary); margin-bottom: 6px; }
+.ad-card-desc { font-size: 12.5px; color: var(--text-secondary); line-height: 1.5; margin-bottom: 14px; }
+.ad-card-btn {
+  background: var(--accent); color: #0d0d0d;
+  border: none; border-radius: var(--radius-sm);
+  padding: 8px 14px; font-size: 12.5px; font-weight: 700;
+  cursor: pointer; transition: all 0.15s; width: 100%;
+  font-family: var(--font-sans);
+}
+.ad-card-btn:hover { background: var(--accent-hover); }
+
+/* ═══════════════════════════════════════════
+   TRENDING
+═══════════════════════════════════════════ */
+.trending-list { display: flex; flex-direction: column; gap: 8px; margin-bottom: 24px; }
+.trending-item {
+  display: flex; align-items: center; gap: 12px;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 12px 14px;
+  cursor: pointer; transition: all 0.12s;
+}
+.trending-item:hover { border-color: var(--accent); background: var(--bg-elevated); }
+.trending-rank {
+  font-size: 12px; font-weight: 700;
+  color: var(--text-tertiary); width: 24px; text-align: center;
+  font-family: var(--font-mono);
+}
+.trending-rank.top { color: var(--accent); }
+.trending-emoji { font-size: 20px; }
+.trending-info { flex: 1; }
+.trending-name { font-size: 13px; font-weight: 600; color: var(--text-primary); }
+.trending-meta { font-size: 11.5px; color: var(--text-tertiary); font-family: var(--font-mono); }
+.trending-badge {
+  font-size: 11px; font-weight: 600;
+  color: var(--accent-text);
+  background: var(--accent-subtle);
+  padding: 2px 8px; border-radius: 20px;
+  white-space: nowrap;
+}
+
+/* ═══════════════════════════════════════════
+   PLAYBOOKS
+═══════════════════════════════════════════ */
+.playbooks-list { display: flex; flex-direction: column; gap: 10px; }
+.playbook-item {
+  display: flex; align-items: flex-start; gap: 14px;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 16px;
+}
+.playbook-icon {
+  width: 44px; height: 44px;
+  border-radius: var(--radius-sm);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 20px; flex-shrink: 0;
+}
+.playbook-info { flex: 1; }
+.playbook-title { font-size: 13.5px; font-weight: 700; margin-bottom: 4px; }
+.playbook-desc { font-size: 12.5px; color: var(--text-secondary); line-height: 1.5; margin-bottom: 8px; }
+.playbook-meta { display: flex; gap: 10px; flex-wrap: wrap; }
+.playbook-stat { font-size: 11.5px; color: var(--text-tertiary); font-family: var(--font-mono); }
+.playbook-action { display: flex; flex-direction: column; gap: 6px; flex-shrink: 0; }
+
+/* ═══════════════════════════════════════════
+   STORIES
+═══════════════════════════════════════════ */
+.stories-grid {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 14px; margin-bottom: 24px;
+}
+.story-card {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 18px;
+}
+.story-avatar {
+  width: 44px; height: 44px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 20px; margin-bottom: 10px;
+}
+.story-user { font-size: 13.5px; font-weight: 700; }
+.story-role { font-size: 12px; color: var(--text-tertiary); margin-bottom: 10px; font-family: var(--font-mono); }
+.story-quote { font-size: 13px; color: var(--text-secondary); line-height: 1.6; margin-bottom: 10px; font-style: italic; }
+.story-kit { font-size: 12px; color: var(--text-tertiary); margin-bottom: 6px; font-family: var(--font-mono); }
+.story-kit span { color: var(--accent-text); }
+.story-result { font-size: 12px; color: var(--success); font-family: var(--font-mono); }
+
+/* ═══════════════════════════════════════════
+   ADS MANAGER
+═══════════════════════════════════════════ */
+.ads-header {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 24px; margin-bottom: 24px;
+}
+.ads-header h2 { font-size: 18px; font-weight: 700; margin-bottom: 6px; }
+.ads-header p { color: var(--text-secondary); font-size: 13.5px; }
+.ads-stats-row {
+  display: grid; grid-template-columns: repeat(4,1fr); gap: 12px; margin-bottom: 24px;
+}
+.ads-stat-card {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 16px;
+}
+.ads-stat-label { font-size: 11.5px; color: var(--text-tertiary); margin-bottom: 6px; font-family: var(--font-mono); }
+.ads-stat-value { font-size: 22px; font-weight: 800; color: var(--text-primary); font-family: var(--font-mono); }
+.ads-stat-change { font-size: 12px; margin-top: 4px; color: var(--success); font-family: var(--font-mono); }
+.ad-create-form {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 24px; margin-bottom: 24px;
+}
+.form-title { font-size: 15px; font-weight: 700; margin-bottom: 18px; font-family: var(--font-mono); }
+.form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.form-group { display: flex; flex-direction: column; gap: 6px; }
+.form-group.full { grid-column: 1/-1; }
+.form-label { font-size: 12px; font-weight: 600; color: var(--text-secondary); font-family: var(--font-mono); }
+.form-input {
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 9px 12px;
+  color: var(--text-primary);
+  font-size: 13.5px;
+  outline: none; transition: border-color 0.15s;
+}
+.form-input:focus { border-color: var(--accent); }
+.form-input::placeholder { color: var(--text-tertiary); }
+textarea.form-input { resize: vertical; min-height: 80px; }
+.form-actions { display: flex; gap: 10px; margin-top: 18px; justify-content: flex-end; }
+.active-ads-list { display: flex; flex-direction: column; gap: 10px; }
+.active-ad-item {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 14px 16px;
+  display: flex; align-items: center; gap: 14px;
+}
+.active-ad-logo { font-size: 24px; }
+.active-ad-info { flex: 1; }
+.active-ad-name { font-size: 13.5px; font-weight: 600; color: var(--text-primary); margin-bottom: 2px; }
+.active-ad-stats { font-size: 12px; color: var(--text-tertiary); font-family: var(--font-mono); }
+.active-ad-status {
+  font-size: 11.5px; font-weight: 600;
+  padding: 3px 8px; border-radius: 20px;
+  font-family: var(--font-mono);
+}
+.status-live { background: var(--success-subtle); color: var(--success); }
+.status-pending { background: var(--accent-subtle); color: var(--accent-text); }
+.status-paused { background: var(--bg-tertiary); color: var(--text-tertiary); }
+.ad-actions-row { display: flex; gap: 6px; }
+.btn-xs {
+  padding: 4px 10px; font-size: 12px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+  background: none; color: var(--text-secondary);
+  cursor: pointer; transition: all 0.12s;
+  font-family: var(--font-sans);
+}
+.btn-xs:hover { background: var(--bg-hover); color: var(--text-primary); }
+
+/* ═══════════════════════════════════════════
+   MODAL
+═══════════════════════════════════════════ */
+.modal-overlay {
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,0.75);
+  backdrop-filter: blur(6px);
+  z-index: 200;
+  display: none; align-items: center; justify-content: center;
+  padding: 20px;
+}
+.modal-overlay.open { display: flex; }
+.modal {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xl);
+  width: 100%; max-width: 560px;
+  max-height: 88vh; overflow-y: auto;
+  box-shadow: var(--shadow-lg), 0 0 60px rgba(0,229,255,0.1);
+  animation: modalIn 0.18s ease;
+}
+@keyframes modalIn {
+  from { opacity: 0; transform: scale(0.96) translateY(10px); }
+  to { opacity: 1; transform: scale(1) translateY(0); }
+}
+.modal-header {
+  display: flex; align-items: flex-start; justify-content: space-between;
+  padding: 20px 20px 0;
+}
+.modal-title { font-size: 17px; font-weight: 700; }
+.modal-close {
+  width: 28px; height: 28px;
+  background: var(--bg-tertiary); border: none;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  color: var(--text-secondary); font-size: 14px;
+  cursor: pointer; flex-shrink: 0;
+}
+.modal-close:hover { background: var(--bg-hover); }
+.modal-body { padding: 20px; }
+.modal-thumb {
+  height: 160px; display: flex; align-items: center;
+  justify-content: center; font-size: 64px;
+  background: var(--bg-tertiary); border-radius: var(--radius-md);
+  margin-bottom: 16px;
+}
+.modal-desc { font-size: 13.5px; color: var(--text-secondary); line-height: 1.6; margin-bottom: 18px; }
+.modal-includes { margin-bottom: 18px; }
+.modal-includes-title { font-size: 13px; font-weight: 700; margin-bottom: 10px; font-family: var(--font-mono); }
+.include-item {
+  display: flex; align-items: center; gap: 8px;
+  font-size: 13px; color: var(--text-secondary);
+  padding: 6px 0; border-bottom: 1px solid var(--border-subtle);
+}
+.include-check { color: var(--success); font-size: 12px; font-family: var(--font-mono); }
+.modal-footer {
+  padding: 16px 20px;
+  border-top: 1px solid var(--border);
+  display: flex; align-items: center; gap: 12px;
+}
+.modal-price { font-size: 16px; font-weight: 800; color: var(--success); font-family: var(--font-mono); }
+.modal-dl-btn {
+  flex: 1; background: var(--accent); color: #0d0d0d;
+  border: none; border-radius: var(--radius-md);
+  padding: 11px; font-size: 14px; font-weight: 700;
+  cursor: pointer; transition: all 0.15s;
+  font-family: var(--font-sans);
+}
+.modal-dl-btn:hover { background: var(--accent-hover); box-shadow: 0 0 20px var(--accent-glow); }
+
+/* ═══════════════════════════════════════════
+   EMAIL SUBSCRIBE MODAL
+═══════════════════════════════════════════ */
+.subscribe-overlay {
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,0.8);
+  backdrop-filter: blur(8px);
+  z-index: 300;
+  display: none; align-items: center; justify-content: center;
+  padding: 20px;
+}
+.subscribe-overlay.open { display: flex; }
+.subscribe-modal {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xl);
+  width: 100%; max-width: 520px;
+  overflow: hidden;
+  animation: modalIn 0.22s cubic-bezier(0.21,1,0.84,1.01);
+  box-shadow: var(--shadow-lg), 0 0 80px rgba(0,229,255,0.12);
+  position: relative;
+}
+.subscribe-header-glow {
+  height: 4px;
+  background: linear-gradient(90deg, var(--accent), var(--purple), var(--accent));
+  background-size: 200% 100%;
+  animation: slide-gradient 3s linear infinite;
+}
+@keyframes slide-gradient {
+  0% { background-position: 0% 0%; }
+  100% { background-position: 200% 0%; }
+}
+.subscribe-close {
+  position: absolute; top: 20px; right: 20px;
+  width: 30px; height: 30px;
+  background: var(--bg-tertiary); border: none;
+  border-radius: 50%; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  color: var(--text-secondary); font-size: 14px;
+  transition: all 0.15s; z-index: 1;
+}
+.subscribe-close:hover { background: var(--bg-hover); color: var(--text-primary); }
+.subscribe-body { padding: 36px 36px 32px; }
+.subscribe-icon {
+  width: 56px; height: 56px;
+  background: var(--accent-subtle);
+  border: 1px solid rgba(0,229,255,0.2);
+  border-radius: var(--radius-md);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 24px; margin-bottom: 20px;
+  color: var(--accent);
+}
+.subscribe-headline {
+  font-size: 24px; font-weight: 800;
+  line-height: 1.2; margin-bottom: 10px;
+  letter-spacing: -0.5px;
+}
+.subscribe-sub {
+  font-size: 14px; color: var(--text-secondary);
+  line-height: 1.6; margin-bottom: 24px;
+}
+.subscribe-perks {
+  display: flex; flex-direction: column; gap: 8px;
+  margin-bottom: 24px;
+  padding: 16px;
+  background: var(--bg-tertiary);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-subtle);
+}
+.subscribe-perk {
+  display: flex; align-items: center; gap: 10px;
+  font-size: 13px; color: var(--text-secondary);
+}
+.subscribe-perk-check { color: var(--success); font-size: 12px; font-family: var(--font-mono); flex-shrink: 0; }
+.subscribe-form { display: flex; flex-direction: column; gap: 12px; }
+.subscribe-input {
+  width: 100%;
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 13px 16px;
+  color: var(--text-primary);
+  font-size: 14px;
+  outline: none;
+  transition: border-color 0.15s, box-shadow 0.15s;
+  font-family: var(--font-sans);
+}
+.subscribe-input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-subtle); }
+.subscribe-input::placeholder { color: var(--text-tertiary); }
+.subscribe-btn {
+  width: 100%;
+  background: var(--accent); color: #0d0d0d;
+  border: none; border-radius: var(--radius-md);
+  padding: 14px; font-size: 14.5px; font-weight: 700;
+  cursor: pointer; transition: all 0.15s;
+  font-family: var(--font-sans);
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+}
+.subscribe-btn:hover { background: var(--accent-hover); box-shadow: 0 0 24px var(--accent-glow); }
+.subscribe-privacy {
+  text-align: center;
+  font-size: 11.5px; color: var(--text-tertiary);
+  margin-top: 10px;
+  font-family: var(--font-mono);
+}
+.subscribe-success {
+  text-align: center; padding: 16px 0;
+  display: none;
+}
+.subscribe-success-icon { font-size: 48px; margin-bottom: 12px; }
+.subscribe-success h3 { font-size: 20px; font-weight: 800; margin-bottom: 8px; }
+.subscribe-success p { font-size: 14px; color: var(--text-secondary); }
+.subscribe-counter {
+  display: inline-flex; align-items: center; gap: 6px;
+  margin-top: 12px;
+  font-size: 12px; color: var(--text-tertiary);
+  font-family: var(--font-mono);
+}
+.sub-count-dot { width: 6px; height: 6px; background: var(--success); border-radius: 50%; }
+
+/* ═══════════════════════════════════════════
+   REMIX STUDIO
+═══════════════════════════════════════════ */
+.remix-layout {
+  display: grid;
+  grid-template-columns: 300px 1fr;
+  gap: 16px;
+  height: calc(100vh - 54px - 56px);
+  min-height: 600px;
+}
+.remix-controls {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  overflow-y: auto;
+  display: flex; flex-direction: column;
+}
+.remix-controls-header {
+  padding: 16px;
+  border-bottom: 1px solid var(--border);
+  position: sticky; top: 0;
+  background: var(--bg-secondary);
+  z-index: 1;
+}
+.remix-controls-header h3 { font-size: 14px; font-weight: 700; margin-bottom: 4px; font-family: var(--font-mono); }
+.remix-controls-header p { font-size: 12px; color: var(--text-tertiary); font-family: var(--font-mono); }
+.remix-kit-picker { padding: 14px 16px; border-bottom: 1px solid var(--border); }
+.remix-kit-select {
+  width: 100%;
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 8px 10px;
+  color: var(--text-primary);
+  font-size: 13px; outline: none;
+  margin-top: 6px; font-family: var(--font-sans);
+}
+.remix-section { padding: 14px 16px; border-bottom: 1px solid var(--border-subtle); }
+.remix-section-title {
+  font-size: 10.5px; font-weight: 700; text-transform: uppercase;
+  letter-spacing: 0.1em; color: var(--text-tertiary);
+  margin-bottom: 12px; font-family: var(--font-mono);
+}
+.remix-row { display: flex; flex-direction: column; gap: 10px; }
+.remix-field { display: flex; flex-direction: column; gap: 5px; }
+.remix-label { font-size: 12px; color: var(--text-secondary); font-weight: 500; font-family: var(--font-mono); }
+.remix-input {
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 7px 10px;
+  color: var(--text-primary);
+  font-size: 13px; outline: none;
+  transition: border-color 0.15s; width: 100%;
+}
+.remix-input:focus { border-color: var(--accent); }
+.remix-input::placeholder { color: var(--text-tertiary); }
+.color-row { display: flex; gap: 8px; align-items: center; }
+.color-swatch {
+  width: 28px; height: 28px; border-radius: 6px;
+  border: 2px solid var(--border); cursor: pointer;
+  flex-shrink: 0; transition: transform 0.12s;
+}
+.color-swatch:hover { transform: scale(1.1); }
+.color-swatch.active { border-color: var(--accent); }
+.color-picker-input {
+  width: 36px; height: 28px; border: 1px solid var(--border);
+  border-radius: 6px; cursor: pointer; padding: 0;
+  background: none; outline: none;
+}
+.remix-select {
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 7px 10px;
+  color: var(--text-primary);
+  font-size: 13px; outline: none; width: 100%;
+  font-family: var(--font-sans);
+}
+.remix-toggle-row { display: flex; gap: 6px; flex-wrap: wrap; }
+.remix-toggle {
+  background: none; border: 1px solid var(--border);
+  border-radius: 20px; padding: 4px 12px;
+  font-size: 12px; color: var(--text-secondary);
+  cursor: pointer; transition: all 0.12s;
+  font-family: var(--font-sans);
+}
+.remix-toggle:hover { border-color: var(--accent); color: var(--accent); }
+.remix-toggle.active {
+  background: var(--accent-subtle);
+  border-color: var(--accent);
+  color: var(--accent-text);
+}
+.remix-range { width: 100%; accent-color: var(--accent); background: none; cursor: pointer; }
+.remix-range-val { font-size: 12px; color: var(--accent-text); font-weight: 700; min-width: 30px; text-align: right; font-family: var(--font-mono); }
+.remix-footer {
+  padding: 14px 16px; margin-top: auto;
+  border-top: 1px solid var(--border);
+  display: flex; flex-direction: column; gap: 8px;
+  position: sticky; bottom: 0;
+  background: var(--bg-secondary);
+}
+.remix-preview-pane {
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  display: flex; flex-direction: column;
+}
+.remix-preview-bar {
+  background: var(--bg-secondary);
+  border-bottom: 1px solid var(--border);
+  padding: 10px 16px;
+  display: flex; align-items: center; gap: 10px;
+}
+.browser-dots { display: flex; gap: 5px; }
+.browser-dot { width: 10px; height: 10px; border-radius: 50%; }
+.browser-dot:nth-child(1) { background: #ff5f57; }
+.browser-dot:nth-child(2) { background: #febc2e; }
+.browser-dot:nth-child(3) { background: #28c840; }
+.browser-url {
+  flex: 1; background: var(--bg-tertiary);
+  border: 1px solid var(--border);
+  border-radius: 20px; padding: 4px 12px;
+  font-size: 11.5px; color: var(--text-tertiary);
+  font-family: var(--font-mono);
+}
+.preview-device-btns { display: flex; gap: 4px; }
+.device-btn {
+  padding: 3px 8px; font-size: 11px;
+  background: none; border: 1px solid var(--border);
+  border-radius: 4px; color: var(--text-tertiary);
+  cursor: pointer; transition: all 0.12s;
+  font-family: var(--font-sans);
+}
+.device-btn.active { background: var(--accent-subtle); border-color: var(--accent); color: var(--accent-text); }
+.preview-frame-wrap {
+  flex: 1; overflow: auto;
+  display: flex; align-items: flex-start; justify-content: center;
+  padding: 16px; background: #080808;
+}
+#sitePreview {
+  width: 100%; border: none;
+  border-radius: 8px;
+  box-shadow: 0 4px 40px rgba(0,0,0,0.8);
+  transition: width 0.3s, height 0.3s;
+  min-height: 500px; display: block;
+}
+.remix-page-header { margin-bottom: 16px; display: flex; align-items: center; justify-content: space-between; }
+.remix-page-header h2 { font-size: 18px; font-weight: 700; }
+.remix-page-header p { font-size: 13px; color: var(--text-secondary); margin-top: 2px; font-family: var(--font-mono); }
+
+/* ═══════════════════════════════════════════
+   PROFILE
+═══════════════════════════════════════════ */
+.profile-header {
+  background: var(--bg-secondary); border: 1px solid var(--border);
+  border-radius: var(--radius-lg); padding: 24px; margin-bottom: 20px;
+  display: flex; align-items: center; gap: 16px;
+}
+.profile-avatar {
+  width: 56px; height: 56px; border-radius: 50%;
+  background: var(--accent-subtle);
+  border: 2px solid var(--accent);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 24px;
+}
+.profile-name { font-size: 17px; font-weight: 700; }
+.profile-email { font-size: 13px; color: var(--text-tertiary); font-family: var(--font-mono); }
+.profile-tier { margin-left: auto; display: flex; flex-direction: column; align-items: flex-end; gap: 6px; }
+.tier-badge {
+  display: inline-flex; align-items: center; gap: 5px;
+  background: var(--accent-subtle); color: var(--accent-text);
+  border: 1px solid rgba(0,229,255,0.2);
+  font-size: 12px; font-weight: 700;
+  padding: 4px 10px; border-radius: 20px;
+  font-family: var(--font-mono);
+}
+.downloads-left { font-size: 12px; color: var(--text-tertiary); font-family: var(--font-mono); }
+
+/* ═══════════════════════════════════════════
+   TOAST
+═══════════════════════════════════════════ */
+.toast-container {
+  position: fixed; bottom: 24px; right: 24px;
+  z-index: 400; display: flex; flex-direction: column; gap: 8px;
+}
+.toast {
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 12px 16px;
+  display: flex; align-items: center; gap: 10px;
+  box-shadow: var(--shadow-lg);
+  font-size: 13.5px;
+  animation: toastIn 0.2s ease;
+  min-width: 260px;
+}
+@keyframes toastIn {
+  from { opacity: 0; transform: translateX(20px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+.toast-icon { font-size: 16px; }
+.toast-text { flex: 1; color: var(--text-primary); }
+
+/* ═══════════════════════════════════════════
+   UTILS
+═══════════════════════════════════════════ */
+.divider { height: 1px; background: var(--border); margin: 20px 0; }
+.empty-state {
+  text-align: center; padding: 60px 20px;
+  color: var(--text-tertiary); font-size: 14px;
+  font-family: var(--font-mono);
+}
+.empty-state .empty-icon { font-size: 40px; margin-bottom: 12px; }
+.tag-row { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 20px; }
+.progress-bar { background: var(--bg-tertiary); border-radius: 99px; height: 6px; overflow: hidden; }
+.progress-fill { height: 100%; background: var(--accent); border-radius: 99px; transition: width 0.4s; }
+@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
+.downloading { animation: pulse 1.2s infinite; }
+
+/* ═══════════════════════════════════════════
+   SCROLLBAR
+═══════════════════════════════════════════ */
+::-webkit-scrollbar { width: 5px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 99px; }
+::-webkit-scrollbar-thumb:hover { background: var(--text-tertiary); }
+
+/* ═══════════════════════════════════════════
+   RESPONSIVE
+═══════════════════════════════════════════ */
+@media (max-width: 768px) {
+  .sidebar { display: none; }
+  .kits-grid { grid-template-columns: 1fr; }
+  .ads-stats-row { grid-template-columns: 1fr 1fr; }
+  .form-grid { grid-template-columns: 1fr; }
+  .hero-fullpage { margin: -16px -16px 16px; }
+  .hero-content { padding: 40px 20px; }
+  .hero-heading { font-size: 32px; }
+  .page { padding: 16px; }
+  .remix-layout { grid-template-columns: 1fr; }
+  .subscribe-body { padding: 28px 24px 24px; }
+  .hero-stats { gap: 20px; }
+}
+</style>
+</head>
+<body>
+<div class="app">
+
+<!-- ═══ TOPNAV ═══ -->
+<nav class="topnav">
+  <div class="nav-logo">
+    <div class="logo-mark"><i class="fa-solid fa-code" style="font-size:13px"></i></div>
+    <span>Buy<span style="color:var(--accent)">Me</span>Code</span>
+  </div>
+  <div class="nav-search">
+    <span class="nav-search-icon"><i class="fa-solid fa-magnifying-glass"></i></span>
+    <input type="text" placeholder="Search kits, tools, playbooks…" id="globalSearch" oninput="handleSearch(this.value)">
+  </div>
+  <div class="nav-actions">
+    <button class="btn-icon" onclick="toggleTheme()" id="themeBtn" title="Toggle theme">🌙</button>
+    <button class="btn-icon" onclick="showSubscribeModal()" title="Subscribe"><i class="fa-solid fa-bell" style="font-size:13px"></i></button>
+    <div class="nav-sep"></div>
+    <button class="btn-secondary" onclick="showSubscribeModal()">Subscribe</button>
+    <button class="btn-primary" onclick="showPage('remix')"><i class="fa-solid fa-wand-magic-sparkles" style="font-size:12px"></i> Remix Studio</button>
+  </div>
+</nav>
+
+<!-- ═══ MAIN LAYOUT ═══ -->
+<div class="main-layout">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sidebar-section">
+      <div class="sidebar-label">Navigate</div>
+      <button class="nav-item active" id="nav-home" onclick="showPage('home')">
+        <span class="icon"><i class="fa-solid fa-house"></i></span> Home
+      </button>
+      <button class="nav-item" id="nav-playbooks" onclick="showPage('playbooks')">
+        <span class="icon"><i class="fa-solid fa-book-open"></i></span> Playbooks
+      </button>
+      <button class="nav-item" id="nav-stories" onclick="showPage('stories')">
+        <span class="icon"><i class="fa-solid fa-star"></i></span> Success Stories
+      </button>
+      <button class="nav-item" id="nav-remix" onclick="showPage('remix')">
+        <span class="icon"><i class="fa-solid fa-wand-magic-sparkles"></i></span> Remix Studio
+        <span class="nav-badge">NEW</span>
+      </button>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-label">Categories</div>
+      <button class="nav-item" onclick="filterByCategory('ecommerce')">
+        <span class="icon">🛒</span> E-Commerce
+      </button>
+      <button class="nav-item" onclick="filterByCategory('portfolio')">
+        <span class="icon">🎨</span> Portfolio
+      </button>
+      <button class="nav-item" onclick="filterByCategory('blog')">
+        <span class="icon">✍️</span> Blog & Content
+      </button>
+      <button class="nav-item" onclick="filterByCategory('saas')">
+        <span class="icon">⚡</span> SaaS & Apps
+      </button>
+      <button class="nav-item" onclick="filterByCategory('business')">
+        <span class="icon">🏢</span> Local Business
+      </button>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-label">Account</div>
+      <button class="nav-item" id="nav-advertise" onclick="showPage('advertise')">
+        <span class="icon"><i class="fa-solid fa-bullhorn"></i></span> Advertise
+      </button>
+      <button class="nav-item" id="nav-profile" onclick="showPage('profile')">
+        <span class="icon"><i class="fa-solid fa-user"></i></span> My Profile
+      </button>
+    </div>
+  </aside>
+
+  <!-- CONTENT -->
+  <main class="content">
+
+    <!-- ══ HOME PAGE ══ -->
+    <div class="page active" id="page-home">
+
+      <!-- PARTICLE HERO -->
+      <div class="hero-fullpage" id="heroSection">
+        <canvas id="particleCanvas"></canvas>
+        <div class="hero-grid-overlay"></div>
+        <div class="hero-content">
+          <div class="hero-eyebrow">
+            <div class="hero-eyebrow-dot"></div>
+            <span id="typedHero">Free Developer Tools & Website Kits</span>
+          </div>
+          <h1 class="hero-heading">
+            Build &amp; Ship<br>
+            <span class="highlight">Faster</span> Than Ever
+          </h1>
+          <p class="hero-sub">
+            Premium website kits, SaaS templates, and step-by-step playbooks — all free. Everything a developer or business owner needs to launch, grow, and scale online.
+          </p>
+          <div class="hero-actions">
+            <button class="btn-hero-primary" onclick="document.getElementById('kits-section').scrollIntoView({behavior:'smooth'})">
+              <i class="fa-solid fa-download"></i> Browse Free Kits
+            </button>
+            <button class="btn-hero-secondary" onclick="showPage('remix')">
+              <i class="fa-solid fa-play"></i> Try Remix Studio
+            </button>
+          </div>
+          <div class="hero-stats">
+            <div class="hero-stat">
+              <div class="hero-stat-val" id="stat-kits">12<span>+</span></div>
+              <div class="hero-stat-lbl">Free Kits</div>
+            </div>
+            <div class="hero-stat">
+              <div class="hero-stat-val">15<span>k+</span></div>
+              <div class="hero-stat-lbl">Downloads</div>
+            </div>
+            <div class="hero-stat">
+              <div class="hero-stat-val">100<span>%</span></div>
+              <div class="hero-stat-lbl">Free Always</div>
+            </div>
+            <div class="hero-stat">
+              <div class="hero-stat-val">4.9<span>★</span></div>
+              <div class="hero-stat-lbl">Avg Rating</div>
+            </div>
+          </div>
+        </div>
+        <div class="hero-scroll-hint">
+          <div class="scroll-arrow"><i class="fa-solid fa-chevron-down"></i></div>
+          <span>scroll to browse</span>
+        </div>
+      </div>
+
+      <!-- ROTATING AD BANNER -->
+      <div class="ad-banner" id="adBanner">
+        <span class="ad-label">Sponsored</span>
+        <div class="ad-logo" id="adLogo">☁️</div>
+        <div class="ad-content">
+          <div class="ad-title" id="adTitle">Loading…</div>
+          <div class="ad-desc" id="adDesc"></div>
+        </div>
+        <button class="ad-cta" id="adCta" onclick="trackAdClick('banner')">Learn More →</button>
+      </div>
+
+      <!-- KITS SECTION -->
+      <div id="kits-section">
+        <div class="section-header">
+          <div class="section-title">All Free Kits</div>
+          <span class="section-link" onclick="showPage('stories')">See success stories →</span>
+        </div>
+
+        <div class="filter-bar">
+          <button class="filter-chip active" onclick="setFilter('all',this)">All</button>
+          <button class="filter-chip" onclick="setFilter('free',this)">✓ Free</button>
+          <button class="filter-chip" onclick="setFilter('new',this)">✨ New</button>
+          <button class="filter-chip" onclick="setFilter('hot',this)">🔥 Hot</button>
+          <button class="filter-chip" onclick="setFilter('ecommerce',this)">🛒 E-Commerce</button>
+          <button class="filter-chip" onclick="setFilter('portfolio',this)">🎨 Portfolio</button>
+          <button class="filter-chip" onclick="setFilter('saas',this)">⚡ SaaS</button>
+          <select class="filter-sort" onchange="sortKits(this.value)">
+            <option value="popular">Most Popular</option>
+            <option value="newest">Newest First</option>
+            <option value="rating">Top Rated</option>
+          </select>
+        </div>
+
+        <div class="kits-grid" id="kitsGrid"></div>
+      </div>
+
+      <!-- TRENDING -->
+      <div class="section-header">
+        <div class="section-title">Trending This Week</div>
+      </div>
+      <div class="trending-list" id="trendingList"></div>
+
+      <!-- SUCCESS STORIES PREVIEW -->
+      <div class="section-header">
+        <div class="section-title">Builder Stories</div>
+        <span class="section-link" onclick="showPage('stories')">View all →</span>
+      </div>
+      <div class="stories-grid" id="homeStories"></div>
+
+      <!-- EMAIL SUBSCRIBE INLINE WIDGET -->
+      <div style="background:linear-gradient(135deg,var(--bg-secondary),var(--bg-tertiary));border:1px solid var(--border);border-radius:var(--radius-xl);padding:36px;text-align:center;margin-bottom:28px;position:relative;overflow:hidden;">
+        <div style="position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--accent),var(--purple),var(--accent));background-size:200%;animation:slide-gradient 3s linear infinite;"></div>
+        <div style="font-size:28px;margin-bottom:12px"><i class="fa-solid fa-code" style="color:var(--accent)"></i></div>
+        <h3 style="font-size:20px;font-weight:800;margin-bottom:8px;letter-spacing:-0.5px">Get notified when new kits drop</h3>
+        <p style="color:var(--text-secondary);margin-bottom:24px;max-width:400px;margin-left:auto;margin-right:auto;font-size:14px">Join 4,200+ developers. Free forever. No spam, ever.</p>
+        <div style="display:flex;gap:10px;max-width:420px;margin:0 auto">
+          <input type="email" id="inlineSubEmail" placeholder="your@email.com" style="flex:1;background:var(--bg-primary);border:1px solid var(--border);border-radius:var(--radius-md);padding:12px 16px;color:var(--text-primary);font-size:14px;outline:none;font-family:var(--font-sans);" onfocus="this.style.borderColor='var(--accent)'" onblur="this.style.borderColor='var(--border)'">
+          <button onclick="handleInlineSubscribe()" style="background:var(--accent);color:#0d0d0d;border:none;border-radius:var(--radius-md);padding:12px 20px;font-size:14px;font-weight:700;cursor:pointer;white-space:nowrap;font-family:var(--font-sans);" onmouseover="this.style.boxShadow='0 0 20px var(--accent-glow)'" onmouseout="this.style.boxShadow='none'">Subscribe Free</button>
+        </div>
+        <p style="font-size:11.5px;color:var(--text-tertiary);margin-top:12px;font-family:var(--font-mono)">🔒 No spam. Unsubscribe any time.</p>
+      </div>
+
+    </div>
+
+    <!-- ══ PLAYBOOKS PAGE ══ -->
+    <div class="page" id="page-playbooks">
+      <div class="section-header">
+        <div class="section-title">Free Playbooks</div>
+      </div>
+      <p style="color:var(--text-secondary);margin-bottom:24px;font-size:14px">Deep-dive guides written by practitioners. No fluff, just actionable strategy.</p>
+      <div class="playbooks-list" id="playbooksList"></div>
+    </div>
+
+    <!-- ══ STORIES PAGE ══ -->
+    <div class="page" id="page-stories">
+      <div class="section-header">
+        <div class="section-title">Builder Success Stories</div>
+      </div>
+      <p style="color:var(--text-secondary);margin-bottom:24px;font-size:14px">Real builders. Real results. Powered by Buy Me Code kits.</p>
+      <div class="stories-grid" id="storiesGrid"></div>
+    </div>
+
+    <!-- ══ REMIX STUDIO PAGE ══ -->
+    <div class="page" id="page-remix">
+      <div class="remix-page-header">
+        <div>
+          <h2>⚡ Remix Studio</h2>
+          <p>// Customise any kit live — like CodePen for websites</p>
+        </div>
+        <div style="display:flex;gap:8px">
+          <button class="btn-secondary" onclick="resetRemix()">↺ Reset</button>
+          <button class="btn-primary" onclick="exportRemix()">⬇ Export HTML</button>
+        </div>
+      </div>
+
+      <div class="remix-layout">
+        <!-- LEFT: Controls -->
+        <div class="remix-controls">
+          <div class="remix-controls-header">
+            <h3><i class="fa-solid fa-sliders" style="color:var(--accent)"></i> Control Panel</h3>
+            <p>// Live edits — every change updates instantly</p>
+          </div>
+
+          <!-- Kit Selector -->
+          <div class="remix-kit-picker">
+            <div class="remix-label">Start from a Kit Preset</div>
+            <select class="remix-kit-select" id="remixKitSelect" onchange="switchRemixKit(this.value)">
+              <option value="0">🛒 E-Commerce Launch Kit</option>
+              <option value="1">🎨 Portfolio Starter Kit</option>
+              <option value="2">⚡ SaaS Landing Page Kit</option>
+              <option value="3">🏢 Local Business Kit</option>
+            </select>
+          </div>
+
+          <!-- Branding -->
+          <div class="remix-section">
+            <div class="remix-section-title">// Branding</div>
+            <div class="remix-row">
+              <div class="remix-field">
+                <div class="remix-label">Site Name</div>
+                <input class="remix-input" type="text" id="rx-sitename" value="My Awesome Store" oninput="updatePreview()">
+              </div>
+              <div class="remix-field">
+                <div class="remix-label">Tagline</div>
+                <input class="remix-input" type="text" id="rx-tagline" value="Everything you need, nothing you don't." oninput="updatePreview()">
+              </div>
+              <div class="remix-field">
+                <div class="remix-label">Logo Emoji / Icon</div>
+                <input class="remix-input" type="text" id="rx-logo" value="🛒" maxlength="4" oninput="updatePreview()">
+              </div>
+            </div>
+          </div>
+
+          <!-- Colors -->
+          <div class="remix-section">
+            <div class="remix-section-title">// Colors</div>
+            <div class="remix-row">
+              <div class="remix-field">
+                <div class="remix-label">Accent / Primary</div>
+                <div class="color-row">
+                  <div class="color-swatch active" style="background:#00e5ff" onclick="setColor('primary','#00e5ff',this)"></div>
+                  <div class="color-swatch" style="background:#ff6b6b" onclick="setColor('primary','#ff6b6b',this)"></div>
+                  <div class="color-swatch" style="background:#b87fff" onclick="setColor('primary','#b87fff',this)"></div>
+                  <div class="color-swatch" style="background:#00e096" onclick="setColor('primary','#00e096',this)"></div>
+                  <div class="color-swatch" style="background:#ff9f43" onclick="setColor('primary','#ff9f43',this)"></div>
+                  <input type="color" class="color-picker-input" value="#00e5ff" id="rx-primary-picker" oninput="setColorRaw('primary',this.value)">
+                </div>
+              </div>
+              <div class="remix-field">
+                <div class="remix-label">Background</div>
+                <div class="color-row">
+                  <div class="color-swatch active" style="background:#0d0d0d" onclick="setColor('bg','#0d0d0d',this)"></div>
+                  <div class="color-swatch" style="background:#0a0f1c" onclick="setColor('bg','#0a0f1c',this)"></div>
+                  <div class="color-swatch" style="background:#f7f7f5" onclick="setColor('bg','#f7f7f5',this)"></div>
+                  <div class="color-swatch" style="background:#1a1a2e" onclick="setColor('bg','#1a1a2e',this)"></div>
+                  <input type="color" class="color-picker-input" value="#0d0d0d" id="rx-bg-picker" oninput="setColorRaw('bg',this.value)">
+                </div>
+              </div>
+              <div class="remix-field">
+                <div class="remix-label">Nav Color</div>
+                <div class="color-row">
+                  <div class="color-swatch active" style="background:#141414" onclick="setColor('nav','#141414',this)"></div>
+                  <div class="color-swatch" style="background:#0f3460" onclick="setColor('nav','#0f3460',this)"></div>
+                  <div class="color-swatch" style="background:#111111" onclick="setColor('nav','#111111',this)"></div>
+                  <div class="color-swatch" style="background:#7c3aed" onclick="setColor('nav','#7c3aed',this)"></div>
+                  <input type="color" class="color-picker-input" value="#141414" id="rx-nav-picker" oninput="setColorRaw('nav',this.value)">
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Typography -->
+          <div class="remix-section">
+            <div class="remix-section-title">// Typography</div>
+            <div class="remix-row">
+              <div class="remix-field">
+                <div class="remix-label">Font Family</div>
+                <select class="remix-select" id="rx-font" onchange="updatePreview()">
+                  <option value="system-ui, sans-serif">System Default</option>
+                  <option value="Georgia, serif">Georgia (Serif)</option>
+                  <option value="'Courier New', monospace">Courier (Mono)</option>
+                  <option value="Futura, 'Century Gothic', sans-serif">Futura (Geometric)</option>
+                  <option value="Palatino, 'Book Antiqua', serif">Palatino (Elegant)</option>
+                  <option value="Impact, Haettenschweiler, sans-serif">Impact (Bold)</option>
+                </select>
+              </div>
+              <div class="remix-field">
+                <div class="remix-label" style="display:flex;justify-content:space-between">
+                  Font Size Base
+                  <span class="remix-range-val" id="rx-fontsize-val">16px</span>
+                </div>
+                <input type="range" class="remix-range" min="14" max="22" value="16" id="rx-fontsize"
+                  oninput="document.getElementById('rx-fontsize-val').textContent=this.value+'px';updatePreview()">
+              </div>
+              <div class="remix-field">
+                <div class="remix-label">Heading Style</div>
+                <div class="remix-toggle-row">
+                  <button class="remix-toggle active" id="ht-normal" onclick="setHeadingStyle('normal',this)">Normal</button>
+                  <button class="remix-toggle" id="ht-bold" onclick="setHeadingStyle('bold',this)">Bold</button>
+                  <button class="remix-toggle" id="ht-light" onclick="setHeadingStyle('light',this)">Light</button>
+                  <button class="remix-toggle" id="ht-italic" onclick="setHeadingStyle('italic',this)">Italic</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Layout -->
+          <div class="remix-section">
+            <div class="remix-section-title">// Layout & Style</div>
+            <div class="remix-row">
+              <div class="remix-field">
+                <div class="remix-label">Layout Style</div>
+                <div class="remix-toggle-row">
+                  <button class="remix-toggle active" id="lt-centered" onclick="setLayout('centered',this)">Centered</button>
+                  <button class="remix-toggle" id="lt-wide" onclick="setLayout('wide',this)">Wide</button>
+                  <button class="remix-toggle" id="lt-sidebar" onclick="setLayout('sidebar',this)">Sidebar</button>
+                </div>
+              </div>
+              <div class="remix-field">
+                <div class="remix-label">Button Style</div>
+                <div class="remix-toggle-row">
+                  <button class="remix-toggle active" id="bs-rounded" onclick="setBtnStyle('rounded',this)">Rounded</button>
+                  <button class="remix-toggle" id="bs-square" onclick="setBtnStyle('square',this)">Square</button>
+                  <button class="remix-toggle" id="bs-pill" onclick="setBtnStyle('pill',this)">Pill</button>
+                </div>
+              </div>
+              <div class="remix-field">
+                <div class="remix-label" style="display:flex;justify-content:space-between">
+                  Border Radius
+                  <span class="remix-range-val" id="rx-radius-val">8px</span>
+                </div>
+                <input type="range" class="remix-range" min="0" max="24" value="8" id="rx-radius"
+                  oninput="document.getElementById('rx-radius-val').textContent=this.value+'px';updatePreview()">
+              </div>
+            </div>
+          </div>
+
+          <!-- Content -->
+          <div class="remix-section">
+            <div class="remix-section-title">// Page Content</div>
+            <div class="remix-row">
+              <div class="remix-field">
+                <div class="remix-label">Hero Headline</div>
+                <input class="remix-input" type="text" id="rx-headline" value="Launch Your Store in 30 Days" oninput="updatePreview()">
+              </div>
+              <div class="remix-field">
+                <div class="remix-label">Hero Subtext</div>
+                <input class="remix-input" type="text" id="rx-subtext" value="Complete kit — theme, plugins, emails, and playbook included." oninput="updatePreview()">
+              </div>
+              <div class="remix-field">
+                <div class="remix-label">CTA Button Text</div>
+                <input class="remix-input" type="text" id="rx-cta" value="Get Started Free →" oninput="updatePreview()">
+              </div>
+              <div class="remix-field">
+                <div class="remix-label">Nav Links</div>
+                <input class="remix-input" type="text" id="rx-navlinks" value="Home, Products, About, Contact" oninput="updatePreview()" placeholder="comma separated">
+              </div>
+            </div>
+          </div>
+
+          <!-- Sections -->
+          <div class="remix-section">
+            <div class="remix-section-title">// Visible Sections</div>
+            <div class="remix-row">
+              <div class="remix-toggle-row" style="flex-wrap:wrap">
+                <button class="remix-toggle active" id="sec-hero" onclick="toggleSection('hero',this)">Hero</button>
+                <button class="remix-toggle active" id="sec-features" onclick="toggleSection('features',this)">Features</button>
+                <button class="remix-toggle active" id="sec-testimonial" onclick="toggleSection('testimonial',this)">Testimonials</button>
+                <button class="remix-toggle active" id="sec-pricing" onclick="toggleSection('pricing',this)">Pricing</button>
+                <button class="remix-toggle active" id="sec-faq" onclick="toggleSection('faq',this)">FAQ</button>
+                <button class="remix-toggle active" id="sec-footer" onclick="toggleSection('footer',this)">Footer</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Actions -->
+          <div class="remix-footer">
+            <button class="btn-primary" onclick="exportRemix()" style="width:100%;font-size:13px">⬇ Export This Kit as HTML</button>
+            <button class="btn-secondary" onclick="saveRemix()" style="width:100%;font-size:12.5px">💾 Save Remix</button>
+          </div>
+        </div>
+
+        <!-- RIGHT: Live Preview -->
+        <div class="remix-preview-pane">
+          <div class="remix-preview-bar">
+            <div class="browser-dots">
+              <div class="browser-dot"></div>
+              <div class="browser-dot"></div>
+              <div class="browser-dot"></div>
+            </div>
+            <div class="browser-url" id="previewUrl">https://yoursite.com — Live Preview</div>
+            <div class="preview-device-btns">
+              <button class="device-btn active" id="dev-desktop" onclick="setDevice('desktop',this)">🖥 Desktop</button>
+              <button class="device-btn" id="dev-tablet" onclick="setDevice('tablet',this)">📱 Tablet</button>
+              <button class="device-btn" id="dev-mobile" onclick="setDevice('mobile',this)">📲 Mobile</button>
+            </div>
+          </div>
+          <div class="preview-frame-wrap" id="previewWrap">
+            <iframe id="sitePreview" scrolling="yes" title="Site Preview"></iframe>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ ADS MANAGER PAGE ══ -->
+    <div class="page" id="page-advertise">
+      <div class="ads-header">
+        <h2><i class="fa-solid fa-bullhorn" style="color:var(--accent)"></i> Ads Manager</h2>
+        <p>Reach thousands of developers and creators actively downloading kits. Native placements that feel like recommendations, not interruptions.</p>
+      </div>
+      <div class="ads-stats-row" id="adsStatsRow"></div>
+      <div class="ad-create-form">
+        <div class="form-title">// Create New Ad</div>
+        <div class="form-grid">
+          <div class="form-group"><label class="form-label">Business / Product Name</label><input class="form-input" type="text" placeholder="e.g. Cloudways Hosting" id="adName"></div>
+          <div class="form-group"><label class="form-label">Logo / Emoji</label><input class="form-input" type="text" placeholder="e.g. ☁️" id="adEmoji" maxlength="4"></div>
+          <div class="form-group full"><label class="form-label">Headline</label><input class="form-input" type="text" placeholder="Managed Hosting for Developers" id="adHeadline"></div>
+          <div class="form-group full"><label class="form-label">Description</label><textarea class="form-input" placeholder="Describe your product in 1-2 sentences…" id="adDesc"></textarea></div>
+          <div class="form-group"><label class="form-label">Call-to-Action Text</label><input class="form-input" type="text" placeholder="Start Free Trial →" id="adCTA"></div>
+          <div class="form-group"><label class="form-label">Destination URL</label><input class="form-input" type="url" placeholder="https://yoursite.com" id="adURL"></div>
+          <div class="form-group"><label class="form-label">Placement</label><select class="form-input" id="adPlacement"><option value="banner">Homepage Banner ($49/week)</option><option value="card">Kit Grid Card ($35/week)</option><option value="sidebar">Sidebar Slot ($25/week)</option><option value="trending">Trending Section ($40/week)</option></select></div>
+          <div class="form-group"><label class="form-label">Target Category</label><select class="form-input" id="adTarget"><option value="all">All Visitors</option><option value="ecommerce">E-Commerce Builders</option><option value="portfolio">Portfolio / Creatives</option><option value="saas">SaaS Builders</option><option value="blog">Bloggers / Writers</option></select></div>
+        </div>
+        <div class="form-actions">
+          <button class="btn-secondary" onclick="previewAd()">Preview Ad</button>
+          <button class="btn-primary" onclick="submitAd()">Submit for Review →</button>
+        </div>
+      </div>
+      <div class="section-header"><div class="section-title">Active Campaigns</div></div>
+      <div class="active-ads-list" id="activeAdsList"></div>
+      <div style="background:var(--bg-secondary);border:1px solid var(--border);border-radius:var(--radius-lg);padding:20px;margin-top:24px;display:none" id="adPreviewBox">
+        <div class="form-title">// Ad Preview</div>
+        <div class="ad-banner" style="margin-bottom:0">
+          <span class="ad-label">Sponsored</span>
+          <div class="ad-logo" id="preview-logo">📦</div>
+          <div class="ad-content"><div class="ad-title" id="preview-title">Your Headline Here</div><div class="ad-desc" id="preview-desc">Your description will appear here.</div></div>
+          <button class="ad-cta" id="preview-cta">Learn More →</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ PROFILE PAGE ══ -->
+    <div class="page" id="page-profile">
+      <div class="profile-header">
+        <div class="profile-avatar">👤</div>
+        <div>
+          <div class="profile-name" id="profileName">Developer</div>
+          <div class="profile-email">guest@buyMeCode.io</div>
+        </div>
+        <div class="profile-tier">
+          <div class="tier-badge">⚡ Free Member</div>
+          <div class="downloads-left" id="dlLeft">∞ Downloads Available</div>
+        </div>
+      </div>
+      <div class="section-header"><div class="section-title">My Downloads</div></div>
+      <div id="myDownloads" style="margin-bottom:24px">
+        <div class="empty-state"><div class="empty-icon">📦</div>No downloads yet — browse kits to get started!</div>
+      </div>
+      <div class="section-header"><div class="section-title">Platform Stats</div></div>
+      <div class="ads-stats-row" id="profileStats"></div>
+    </div>
+
+  </main>
+</div>
+</div>
+
+<!-- ══ KIT DETAIL MODAL ══ -->
+<div class="modal-overlay" id="kitModal" onclick="closeModal(event)">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title" id="modalTitle">Kit Name</div>
+      <button class="modal-close" onclick="closeKitModal()">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="modal-thumb" id="modalThumb">📦</div>
+      <div class="kit-tags" id="modalTags"></div>
+      <p class="modal-desc" id="modalDesc"></p>
+      <div class="modal-includes">
+        <div class="modal-includes-title">// What's included</div>
+        <div id="modalIncludes"></div>
+      </div>
+      <div style="display:flex;gap:10px;margin-bottom:16px">
+        <div style="flex:1"><div style="font-size:12px;color:var(--text-tertiary);margin-bottom:4px;font-family:var(--font-mono)">Downloads</div><div style="font-size:14px;font-weight:700;font-family:var(--font-mono)" id="modalDownloads">0</div></div>
+        <div style="flex:1"><div style="font-size:12px;color:var(--text-tertiary);margin-bottom:4px;font-family:var(--font-mono)">Rating</div><div style="font-size:14px;font-weight:700;color:var(--accent)" id="modalRating">—</div></div>
+        <div style="flex:1"><div style="font-size:12px;color:var(--text-tertiary);margin-bottom:4px;font-family:var(--font-mono)">Category</div><div style="font-size:14px;font-weight:700;text-transform:capitalize;font-family:var(--font-mono)" id="modalCategory">—</div></div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <div class="modal-price">FREE</div>
+      <button class="modal-dl-btn" id="modalDlBtn" onclick="downloadKit()">⬇ Download Free Kit</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ EMAIL SUBSCRIBE MODAL ══ -->
+<div class="subscribe-overlay" id="subscribeModal" onclick="closeSubscribeOutside(event)">
+  <div class="subscribe-modal" id="subscribeModalBox">
+    <div class="subscribe-header-glow"></div>
+    <button class="subscribe-close" onclick="closeSubscribeModal()">✕</button>
+    <div class="subscribe-body">
+      <div class="subscribe-icon"><i class="fa-solid fa-code"></i></div>
+      <h2 class="subscribe-headline">Get Free Kits<br>Delivered to You</h2>
+      <p class="subscribe-sub">Join 4,200+ builders who get new kits, tutorials, and exclusive tools delivered every week. Free forever.</p>
+      <div class="subscribe-perks">
+        <div class="subscribe-perk"><span class="subscribe-perk-check">✓</span> Instant access to all 12+ free kits on subscribe</div>
+        <div class="subscribe-perk"><span class="subscribe-perk-check">✓</span> Weekly drops of new website templates</div>
+        <div class="subscribe-perk"><span class="subscribe-perk-check">✓</span> Exclusive dev guides not published anywhere else</div>
+        <div class="subscribe-perk"><span class="subscribe-perk-check">✓</span> Early access to Remix Studio features</div>
+      </div>
+      <div id="subscribeFormWrap">
+        <div class="subscribe-form">
+          <input type="text" class="subscribe-input" id="sub-name" placeholder="Your first name" autocomplete="off">
+          <input type="email" class="subscribe-input" id="sub-email" placeholder="your@email.com" autocomplete="off">
+          <button class="subscribe-btn" onclick="handleSubscribe()">
+            <i class="fa-solid fa-paper-plane"></i> Subscribe Free — Get Instant Access
+          </button>
+        </div>
+        <div class="subscribe-counter">
+          <span class="sub-count-dot"></span>
+          <span>4,247 developers already subscribed</span>
+        </div>
+        <p class="subscribe-privacy">🔒 No spam. Unsubscribe anytime. Your data stays private.</p>
+      </div>
+      <div class="subscribe-success" id="subSuccess">
+        <div class="subscribe-success-icon">🎉</div>
+        <h3>You're In!</h3>
+        <p>Check your inbox — your kit access link is on its way.</p>
+        <p style="margin-top:8px;color:var(--accent);font-family:var(--font-mono)">Welcome to Buy Me Code. 🚀</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ TOAST ══ -->
+<div class="toast-container" id="toastContainer"></div>
+<script src="script.js"></script>
+</body>
+</html>
